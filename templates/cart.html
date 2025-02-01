@@ -1,0 +1,11 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    {% for product, quantity_price in cart.items %}
+        {% if discount %}
+            <h3>{{ product.title }} - {{ product.discount_price }} x {{ quantity_price.0 }} = {{ quantity_price.1 }}</h3>
+        {% else %}
+            <h3>{{ product.title }} - {{ product.price }} x {{ quantity_price.0 }} = {{ quantity_price.1 }}</h3>
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

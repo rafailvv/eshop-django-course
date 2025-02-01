@@ -1,0 +1,143 @@
+{% extends 'common.html' %}
+
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'detail.css' %}">
+{% endblock styles %}
+
+{% block content %}
+    <script>
+        window.addEventListener('load', function() {
+           let increase = document.getElementById("increase"),
+               decrease = document.getElementById("decrease"),
+               counter = document.getElementById("counter");
+
+           function getCookie(name) {
+               let cookieValue = null;
+               if (document.cookie && document.cookie !== '') {
+                   const cookies = document.cookie.split(';');
+                   for (let i = 0; i < cookies.length; i++) {
+                       const cookie = cookies[i].trim();
+                       // Does this cookie string begin with the name we want?
+                       if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                           break;
+                       }
+                   }
+               }
+               return cookieValue;
+           }
+           const csrftoken = getCookie('csrftoken');
+
+           increase.onclick = function (event) {
+               let value = parseInt(counter.innerHTML);
+               if (isNaN(value)) value = 0;
+               if (value < {{ product.stock }}) value++;
+               counter.innerHTML = value.toString();
+           }
+           decrease.onclick = function (event) {
+               let value = parseInt(counter.innerHTML);
+               if (isNaN(value)) value = 0;
+               if (value > 0) value--;
+               counter.innerHTML = value.toString();
+           }
+
+           fetch(`{% url "cart" product.id %}`)
+               .then((response) => {
+                    if (!response.ok) {
+                        displayCartButton(false);
+                        return response.json();
+                    } else {
+                        displayCartButton(true);
+                        return response.json();
+                    }
+               }).then(response => {
+                   if (response.quantity) counter.innerHTML = response.quantity.toString();
+           });
+
+           function displayCartButton(isRemove) {
+                let infoContainer = document.querySelector("div[class='info-container']"),
+                    oldButton = document.getElementById("add-to-cart"),
+                    cartButton = document.createElement("a");
+
+                if (oldButton) infoContainer.removeChild(infoContainer.lastChild);
+
+                if (!isRemove) {
+                    cartButton.className = "btn btn-danger";
+                    cartButton.id = "add-to-cart";
+                    cartButton.type = "button";
+                    cartButton.innerHTML = "Добавить в корзину";
+                    cartButton.onclick = addToCart;
+                } else {
+                    cartButton.className = "btn btn-outline-danger";
+                    cartButton.id = "add-to-cart";
+                    cartButton.type = "button";
+                    cartButton.innerHTML = "Удалить из корзины";
+                    cartButton.onclick = removeFromCart;
+                }
+
+                infoContainer.appendChild(cartButton);
+           }
+
+           function addToCart() {
+               let body = {
+                   productId: {{ product.id }},
+                   quantity: parseInt(counter.innerHTML)
+               };
+
+               fetch(`{% url "cart" %}`, {
+                   method: "POST",
+                   headers: {
+                       "Content-Type": "application/json",
+                       "X-CSRFToken": csrftoken
+                   },
+                   body: JSON.stringify(body)
+               }).then((response) => {
+                   if (response.ok) displayCartButton(true)
+                   }
+               );
+           }
+
+           function removeFromCart() {
+               fetch(`{% url "cart" product.id %}`, {
+                   method: 'DELETE',
+                   headers: {
+                       "Content-Type": "application/json",
+                       "X-CSRFToken": csrftoken
+                   }
+               }).then((response) => {
+                    if (!response.ok) alert("Something went wrong.");
+                    else {
+                        displayCartButton(false);
+                        counter.innerHTML = "0";
+                    }
+               }
+               )
+           }
+
+        });
+    </script>
+
+    <div class="product-container">
+        <div class="image-container">
+            {% for image in product.productimage_set.all %}
+                <img src="{{ image.image.url }}" alt="" height="300px">
+            {% endfor %}
+        </div>
+        <div class="info-container">
+            <h1>{{ product.title }}</h1>
+            <p>{{ product.description }}</p>
+            {% if discount %}
+                <h3>{{ product.discount_price }}</h3>
+            {% else %}
+                <h3>{{ product.price }}</h3>
+            {% endif %}
+            <div class="counter-block">
+                <button class="btn btn-light" id="decrease">-</button>
+                <b id="counter">0</b>
+                <button class="btn btn-light" id="increase">+</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

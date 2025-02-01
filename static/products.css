@@ -1,0 +1,13 @@
+img {
+    width: 240px!important;
+}
+
+.products {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.card {
+    margin: 10px;
+}

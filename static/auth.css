@@ -1,0 +1,15 @@
+.form-control {
+    width: 300px!important;
+}
+
+.auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80%;
+}
+
+.auth-btn {
+    margin-top: 10px;
+}

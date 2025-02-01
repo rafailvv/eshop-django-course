@@ -1,0 +1,26 @@
+{% extends 'common.html' %}
+
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'auth.css' %}">
+{% endblock styles %}
+
+{% block content %}
+    <div class="auth">
+        {% for message in messages %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <form method="POST">
+            {% csrf_token %}
+            <label for="id_username">Имя пользователя</label>
+            <input type="text" name="username" id="id_username" class="form-control">
+
+            <label for="id_password">Пароль</label>
+            <input type="password" name="password" id="id_password" class="form-control">
+
+            <button type="submit" class="btn btn-success auth-btn">Войти</button>
+        </form>
+    </div>
+{% endblock content %}
