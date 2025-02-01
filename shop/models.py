@@ -34,9 +34,10 @@ class Product(models.Model):
 
     class Meta:
         db_table = 'product'
-        indexes = [models.Index(fields=['title'])]
+        indexes = [models.Index(fields=["price"])]
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
 
 
 class ProductImage(models.Model):
