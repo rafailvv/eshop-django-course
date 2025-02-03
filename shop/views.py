@@ -15,6 +15,48 @@ from shop.models import Product
 from shop.forms import CustomUserCreationForm, UserAuthForm
 from shop.mixins import IsAuthenticatedMixin
 
+from django.http import HttpResponse
+from .models import Product
+
+
+def all_products(request):
+    # Получаем все объекты модели Product
+    products = Product.objects.all()
+
+    # Формируем HTML-страницу как строку
+    html = """
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Список продуктов</title>
+    </head>
+    <body>
+        <h1>Список продуктов</h1>
+        <ul>
+    """
+
+    # Если есть продукты, формируем список
+    if products.exists():
+        for product in products:
+            html += f"<li><strong>{product.name}</strong>"
+            if getattr(product, 'description', None):
+                html += f" – {product.description}"
+            if getattr(product, 'price', None):
+                html += f" – Цена: {product.price}"
+            html += "</li>"
+    else:
+        html += "<li>Продукты отсутствуют</li>"
+
+    # Завершаем HTML-страницу
+    html += """
+        </ul>
+    </body>
+    </html>
+    """
+
+    return HttpResponse(html)
+
 
 class MainView(IsAuthenticatedMixin, ListView):
     template_name = 'index.html'
@@ -193,3 +235,5 @@ class ShowCartView(View):
             "cart.html",
             context={"cart": product_quantity_cart, "discount": request.discount}
         )
+
+
