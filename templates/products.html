@@ -2,16 +2,24 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Список продуктов</title>
+    <title>Список товаров</title>
 </head>
 <body>
-    <h1>Список продуктов</h1>
-    <p>Текущее время: {{ current_time }}</p> <!-- Отображение текущего времени -->
+    <!-- Отображение текущей даты и времени -->
+    <h1>Текущая дата и время: {{ current_time }}</h1>
+
+    <!-- Отображение списка товаров -->
+    <h2>Товары</h2>
     <ul>
         {% for product in products %}
             <li>
-                <strong>{{ product.title }}</strong> - Цена: {{ product.price }}
+                <strong>Название:</strong> {{ product.title }}<br>
+                <strong>Описание:</strong> {{ product.description }}<br>
+                <strong>Цена:</strong> {{ product.price }}<br>
+                <strong>В наличии:</strong> {{ product.stock }}
             </li>
+        {% empty %}
+            <li>Нет доступных товаров.</li>
         {% endfor %}
     </ul>
 </body>
