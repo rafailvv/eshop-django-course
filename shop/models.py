@@ -20,17 +20,21 @@ class ProductManager(models.Manager):
 
 
 
+from django.db import models
+
 class Product(models.Model):
     title = models.CharField(max_length=255, verbose_name='Название')
     description = models.TextField(verbose_name="Описание")
     price = models.FloatField(verbose_name="Цена")
     stock = models.IntegerField(verbose_name="В наличии")
     attributes = models.ManyToManyField('Attribute', verbose_name="Свойства")
+    image = models.ImageField(upload_to="products/", verbose_name="Изображение", blank=True, null=True)
 
     objects = ProductManager()
 
     def __str__(self):
         return f"{self.title}: #{self.id}"
+
 
     class Meta:
         db_table = 'product'
