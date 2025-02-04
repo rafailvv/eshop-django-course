@@ -40,7 +40,7 @@ class MainView(IsAuthenticatedMixin, ListView):
         return qs.prefetch_related("productimage_set")
 
 
-def register_page(request: HttpRequest):
+def registration_view(request: HttpRequest):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
