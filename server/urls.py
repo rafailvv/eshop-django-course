@@ -26,12 +26,14 @@ from shop.views import (
     LoginView,
     ProductDetailView,
     CartView,
-    ShowCartView, all_products,
+    ShowCartView, all_products, login_page, logout_user,
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MainView.as_view(), name="main-page"),
+    path("login/", login_page, name="login"),
+    path("logout/", logout_user, name="logout"),
     path('register/', registration_view, name="register-page"),
     path("login/", LoginView.as_view(), name="login-page"),
     path("logout/", logout_page, name="logout"),

@@ -39,6 +39,26 @@ class MainView(IsAuthenticatedMixin, ListView):
         qs = super().get_queryset()
         return qs.prefetch_related("productimage_set")
 
+def login_page(request):
+    if request.method == "POST":
+        form = UserAuthForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return redirect("main-page")  # Укажите вашу главную страницу
+            else:
+                form.add_error(None, "Неверное имя пользователя или пароль.")
+    else:
+        form = UserAuthForm()
+    return render(request, "login.html", {"form": form})
+
+def logout_user(request):
+    logout(request)
+    return redirect("main-page")  # Укажите вашу главную страницу
+
 
 def registration_view(request: HttpRequest):
     if request.method == "POST":
