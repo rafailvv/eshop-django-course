@@ -12,15 +12,17 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <form method="POST">
-            {% csrf_token %}
-            <label for="id_username">Имя пользователя</label>
-            <input type="text" name="username" id="id_username" class="form-control">
+        {% form %}
+        <button type="submit" class="btn btn-success auth-btn">Войти</button>-->
+<!--        <form method="POST">-->
+<!--            {% csrf_token %}-->
+<!--            <label for="id_username">Имя пользователя</label>-->
+<!--            <input type="text" name="username" id="id_username" class="form-control">-->
 
-            <label for="id_password">Пароль</label>
-            <input type="password" name="password" id="id_password" class="form-control">
+<!--            <label for="id_password">Пароль</label>-->
+<!--            <input type="password" name="password" id="id_password" class="form-control">-->
 
-            <button type="submit" class="btn btn-success auth-btn">Войти</button>
-        </form>
+<!--            <button type="submit" class="btn btn-success auth-btn">Войти</button>-->
+<!--        </form>-->
     </div>
 {% endblock content %}
