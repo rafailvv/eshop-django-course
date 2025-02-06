@@ -37,3 +37,15 @@ class UserAuthForm(forms.Form):
             self.add_error("password", "Пароль не может быть меньше 8 символов.")
 
         return self.cleaned_data
+
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        if not username.isalpha():
+            raise forms.ValidationError("Имя пользователя должно содержать только латинские буквы без пробелов.")
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if len(password) < 8:
+            raise forms.ValidationError("Пароль должен содержать не менее 8 символов.")
+        return password
