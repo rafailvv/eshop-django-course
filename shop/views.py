@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.db.models import F, QuerySet, Value
@@ -38,6 +39,18 @@ class MainView(IsAuthenticatedMixin, ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.prefetch_related("productimage_set")
+
+class RegistrationView(View):
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, "registration.html", {"form": form})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+        return render(request, "registration.html", {"form": form})
 
 def login_page(request):
     if request.method == "POST":
